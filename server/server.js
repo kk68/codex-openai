@@ -36,7 +36,7 @@ app.post('/', async (req, res) => {
     });
 
     res.status(200).send({
-      bot: response.data.choices[0].text
+      bot: `${response.data.choices[0].text}`
     });
 
   } catch (error) {
@@ -45,4 +45,4 @@ app.post('/', async (req, res) => {
   }
 })
 
-app.listen(5000, () => console.log('AI server started on http://localhost:5000'))
+app.listen(5005, () => console.log('AI server started on http://localhost:5005'))

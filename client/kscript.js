@@ -1,13 +1,8 @@
 import bot from './assets/bot.svg'
 import user from './assets/user.svg'
-import hljs from 'highlight.js';
 
 const form = document.querySelector('form')
 const chatContainer = document.querySelector('#chat_container')
-chatContainer.addEventListener('DOMNodeInserted', () => {
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-});
-
 
 let loadInterval
 
@@ -30,10 +25,10 @@ function typeText(element, text) {
 
     let interval = setInterval(() => {
         if (index < text.length) {
-          element.innerHTML += text.charAt(index)
-          index++;
+            element.innerHTML += text.charAt(index)
+            index++
         } else {
-          clearInterval(interval);
+            clearInterval(interval)
         }
     }, 1)
 }
@@ -50,32 +45,22 @@ function generateUniqueId() {
 }
 
 function chatStripe(isAi, value, uniqueId) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.setAttribute('id', uniqueId);
-    messageDiv.innerHTML = value;
-
-    hljs.highlightAuto(value).value;
-    messageDiv.innerHTML = hljs.highlightAuto(value).value;
-
     return (
         `
         <div class="wrapper ${isAi && 'ai'}">
-        <div class="chat">
-            <div class="profile">
-                <img 
-                  src=${isAi ? bot : user} 
-                  alt="${isAi ? 'bot' : 'user'}" 
-                />
-            </div>
-            ${messageDiv.outerHTML}
+            <div class="chat">
+                <div class="profile">
+                    <img 
+                      src=${isAi ? bot : user} 
+                      alt="${isAi ? 'bot' : 'user'}" 
+                    />
+                </div>
+                <div class="message" id=${uniqueId}>${value}</div>
             </div>
         </div>
-        </div>
-        `
-    );
+    `
+    )
 }
-
 
 const handleSubmit = async (e) => {
     e.preventDefault()
@@ -84,7 +69,6 @@ const handleSubmit = async (e) => {
 
     // user's chatstripe
     chatContainer.innerHTML += chatStripe(false, data.get('prompt'))
-    chatContainer.scrollTop = chatContainer.scrollHeight;
 
     // to clear the textarea input 
     form.reset()
@@ -92,6 +76,8 @@ const handleSubmit = async (e) => {
     // bot's chatstripe
     const uniqueId = generateUniqueId()
     chatContainer.innerHTML += chatStripe(true, " ", uniqueId)
+
+    // to focus scroll to the bottom 
     chatContainer.scrollTop = chatContainer.scrollHeight;
 
     // specific message div 
@@ -101,7 +87,7 @@ const handleSubmit = async (e) => {
     loader(messageDiv)
 
   //  const response = await fetch('https://codex-im0y.onrender.com/', {
-    const response = await fetch('http://localhost:5005/', {
+    const response = await fetch('http://localhost:5000/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -110,7 +96,6 @@ const handleSubmit = async (e) => {
             prompt: data.get('prompt')
         })
     })
-    
 
     clearInterval(loadInterval)
     messageDiv.innerHTML = " "

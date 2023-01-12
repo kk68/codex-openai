@@ -24,8 +24,8 @@ body {
 
 #chat_container {
   flex: 1;
-  width: 80vw;
-  height: 80vh;
+  width: 100vw;
+  height: 90vh;
   overflow-y: auto;
 
   display: flex;
